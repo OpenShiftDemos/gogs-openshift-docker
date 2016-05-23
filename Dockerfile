@@ -11,7 +11,8 @@ RUN rpm --import https://rpm.packager.io/key && \
 RUN /usr/bin/fix-permissions /var/lib/gogs && \
     /usr/bin/fix-permissions /home/gogs && \
     /usr/bin/fix-permissions /opt/gogs && \
-    /usr/bin/fix-permissions /etc/gogs
+    /usr/bin/fix-permissions /etc/gogs && \
+    /usr/bin/fix-permissions /var/log/gogs
 EXPOSE 3000
 USER 997
 CMD ["/usr/bin/rungogs"]
