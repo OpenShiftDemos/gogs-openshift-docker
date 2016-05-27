@@ -87,8 +87,8 @@ We can use the data stored in the ConfigMap as a volume and actually mount it
 into our running container's filesystem. The following command will update the
 deployment definition for Gogs to add the volume definition and volume mount:
 
-    oc volume dc/gogs --add --name=config-volume -m /etc/gogs/conf/ \
-    --source='{"configMap":{"name":"config-volume","items":[{"key":"appini","path":"app.ini"}]}}'
+    oc volume dc/gogs --add --overwrite --name=config-volume -m /etc/gogs/conf/ \
+    --source='{"configMap":{"name":"gogs","items":[{"key":"appini","path":"app.ini"}]}}'
 
 Note that this will trigger a new deployment of the Gogs pod(s). It assumes that
 you did not change the name of the application in the initial template process
@@ -116,3 +116,4 @@ scaling of the Gogs server may prove difficult.
 ## ToDos
 * add liveness/readiness probe(s)
 * complete template with persistent postgresql
+* git via ssh support
