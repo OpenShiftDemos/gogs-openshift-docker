@@ -95,6 +95,24 @@ you did not change the name of the application in the initial template process
 step. If you *did* change the name of the application, make sure you substitute
 `dc/gogs` for the appropriate name of your deployment.
 
+## Persistent Storage for Repositories
+Gogs stores the actual git repository data on the filesystem inside the
+container. This, too, requires some more work so that data is persisted across
+container restarts.
+
+Configuration of persistent volumes and claims is outside of scope of this
+readme, but more documentation on it can be found
+[here](https://docs.openshift.org/latest/dev_guide/persistent_volumes.html).
+
+Some sample claim/volume definitions are in this repository. Once your volume
+and claim exist, you could do something like the following:
+
+    oc volume dc/gogs --add --overwrite -t persistentVolumeClaim \
+    --claim-name gogs-pvc -m /home/gogs/gogs-repositories --name repos
+
+As Gogs only currently supports writing to a local filesystem, horizontal
+scaling of the Gogs server may prove difficult.
+
 ## ToDos
 * add liveness/readiness probe(s)
 * complete template with persistent postgresql

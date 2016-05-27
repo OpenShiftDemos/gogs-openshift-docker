@@ -80,10 +80,16 @@ objects:
             protocol: TCP
           resources: {}
           terminationMessagePath: /dev/termination-log
+          volumeMounts:
+          - mountPath: /home/gogs/gogs-repositories
+            name: repos
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         securityContext: {}
         terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: repos
     test: false
     triggers:
     - type: ConfigChange
