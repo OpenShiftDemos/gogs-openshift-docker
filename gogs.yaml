@@ -115,7 +115,7 @@ objects:
         version: "latest"
       from:
         kind: DockerImage
-        name: thoraxe/gogs:latest
+        name: openshiftdemos/gogs:latest
       importPolicy: {}
       name: "latest"
 parameters:
