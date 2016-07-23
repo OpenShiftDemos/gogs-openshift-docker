@@ -128,14 +128,6 @@ objects:
     resources:
       requests:
         storage: ${VOLUME_CAPACITY}
-- apiVersion: v1
-  kind: Route
-  metadata:
-    name: gogs
-  spec:
-    to:
-      kind: Service
-      name: ${APPLICATION_NAME}     
 parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
