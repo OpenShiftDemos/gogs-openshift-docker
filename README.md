@@ -113,7 +113,41 @@ and claim exist, you could do something like the following:
 As Gogs only currently supports writing to a local filesystem, horizontal
 scaling of the Gogs server may prove difficult.
 
+
+## Shortcut Instructions
+
+gogs (create your admin in ui)
+
+    oc project gogs
+    oc new-app -f https://raw.githubusercontent.com/eformat/gogs-openshift-docker/master/gogs-persistent.yaml
+
+get POSTGRES USER PASSWORD
+
+    oc exec $(oc get pods | grep postgres | awk '{print $1}') env | grep POSTGRES
+
+login to gogs url, setup:
+
+* postgres settings
+
+    postgresql:5432
+    POSTGRESQL_USER=gogs
+    POSTGRESQL_PASSWORD=<password>
+    POSTGRESQL_DATABASE=gogs
+
+* gogs settings
+
+    application url: http://gogs-gogs.192.168.137.2.xip.io
+    repos: /var/tmp
+    setup an admin user / pwd (you)
+
+once started, set configmap with admin setup
+
+    oc project gogs
+    oc create configmap gogs --from-file=appini=<(oc exec $(oc get pods | grep gogs | awk '{print $1}') -- cat /etc/gogs/conf/app.ini)
+    oc volume dc/gogs --add --overwrite --name=config-volume -m /etc/gogs/conf/ \
+      --source='{"configMap":{"name":"gogs","items":[{"key":"appini","path":"app.ini"}]}}'
+
 ## ToDos
 * add liveness/readiness probe(s)
-* complete template with persistent postgresql
+* complete template with persistent postgresql - DONE
 * git via ssh support
