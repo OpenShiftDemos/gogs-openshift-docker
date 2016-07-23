@@ -129,18 +129,18 @@ login to gogs url, setup:
 
 * postgres settings
 
-
     postgresql:5432
     POSTGRESQL_USER=gogs
     POSTGRESQL_PASSWORD=<password>
     POSTGRESQL_DATABASE=gogs
+    
 
 * gogs settings
-
 
     application url: http://gogs-gogs.192.168.137.2.xip.io
     repos: /var/tmp
     setup an admin user / pwd (you)
+
 
 once started, set configmap with admin setup
 
