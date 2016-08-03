@@ -168,7 +168,7 @@ objects:
           resources: {}
           terminationMessagePath: /dev/termination-log
           volumeMounts:
-          - mountPath: /home/gogs/gogs-repositories
+          - mountPath: /var/tmp
             name: gogs-data         
         dnsPolicy: ClusterFirst
         restartPolicy: Always
