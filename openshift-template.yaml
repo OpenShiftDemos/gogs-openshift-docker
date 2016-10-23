@@ -207,13 +207,22 @@ objects:
     name: ${APPLICATION_NAME}
   spec:
     tags:
+    - name: "${GOGS_VERSION}"
+      from:
+        kind: DockerImage
+        name: "${GOGS_REPOSITORY_NAME}/${GOGS_IMAGE_NAME}:${GOGS_VERSION}"
+      importPolicy: {}
+      annotations:
+        description: The Gogs git server docker image
+        tags: gogs,go,golang
+        version: "${GOGS_VERSION}"
     - annotations:
         description: The Gogs git server docker image
         tags: gogs,go,golang
         version: "latest"
       from:
-        kind: DockerImage
-        name: "${GOGS_REPOSITORY_NAME}/${GOGS_IMAGE_NAME}:0.9.97-1"
+        kind: ImageStreamTag
+        name: "0.9.97-1"
       importPolicy: {}
       name: "latest"
 - apiVersion: v1
