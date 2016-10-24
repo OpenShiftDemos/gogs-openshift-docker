@@ -1,18 +1,24 @@
-apiVersion: v1
 kind: Template
+apiVersion: v1
 labels:
-  template: gogs
-  version: 0.9.97
+  version: 0.9.97-1
   group: infrastructure
 metadata:
   annotations:
     description: The Gogs git server (https://gogs.io/)
-    tags: gogs,go,golang
-    version: 0.9.97
+    tags: instant-app,gogs,go,golang
+    version: 0.9.97-1
   name: gogs
 objects:
-- apiVersion: v1
-  kind: Service
+- kind: ServiceAccount
+  apiVersion: v1
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+- kind: Service
+  apiVersion: v1
   metadata:
     annotations:
       description: Exposes the database server
@@ -24,8 +30,8 @@ objects:
       targetPort: 5432
     selector:
       name: ${DATABASE_SERVICE_NAME}
-- apiVersion: v1
-  kind: DeploymentConfig
+- kind: DeploymentConfig
+  apiVersion: v1
   metadata:
     annotations:
       description: Defines how to deploy the database
@@ -96,14 +102,15 @@ objects:
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
-- apiVersion: v1
-  kind: Service
+- kind: Service
+  apiVersion: v1
   metadata:
     annotations:
       description: The Gogs server's http port
+      service.alpha.openshift.io/dependencies: '[{"name":"gogs-postgresql","namespace":"","kind":"Service"}]'
     labels:
       app: ${APPLICATION_NAME}
-    name: ${APPLICATION_NAME}-service
+    name: ${APPLICATION_NAME}
   spec:
     ports:
     - name: 3000-tcp
@@ -117,9 +124,9 @@ objects:
     type: ClusterIP
   status:
     loadBalancer: {}
-- apiVersion: v1
+- kind: Route
+  apiVersion: v1
   id: ${APPLICATION_NAME}-http
-  kind: Route
   metadata:
     annotations:
       description: Route for application's http service.
@@ -129,9 +136,9 @@ objects:
   spec:
     host: ${HOSTNAME_HTTP}
     to:
-      name: ${APPLICATION_NAME}-service
-- apiVersion: v1
-  kind: DeploymentConfig
+      name: ${APPLICATION_NAME}
+- kind: DeploymentConfig
+  apiVersion: v1
   metadata:
     labels:
       app: ${APPLICATION_NAME}
@@ -168,8 +175,12 @@ objects:
           resources: {}
           terminationMessagePath: /dev/termination-log
           volumeMounts:
-          - mountPath: /var/tmp
-            name: gogs-data
+          - name: gogs-data
+            mountPath: /var/tmp
+          - name: gogs-repositories
+            mountPath: /home/gogs/gogs-repositories
+          - name: gogs-etc
+            mountPath: /etc/gogs/conf
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         securityContext: {}
@@ -178,6 +189,15 @@ objects:
         - name: gogs-data
           persistentVolumeClaim:
             claimName: gogs-data
+        - name: gogs-repositories
+          persistentVolumeClaim:
+            claimName: gogs-repositories
+        - name: gogs-etc
+          configMap:
+            name: gogs-default-config
+            items:
+              - key: app.ini
+                path: app.ini
         livenessProbe:
             httpGet:
               path: /
@@ -199,8 +219,8 @@ objects:
           kind: ImageStreamTag
           name: ${APPLICATION_NAME}:latest
       type: ImageChange
-- apiVersion: v1
-  kind: ImageStream
+- kind: ImageStream
+  apiVersion: v1
   metadata:
     labels:
       app: ${APPLICATION_NAME}
@@ -225,8 +245,8 @@ objects:
         name: "0.9.97-1"
       importPolicy: {}
       name: "latest"
-- apiVersion: v1
-  kind: PersistentVolumeClaim
+- kind: PersistentVolumeClaim
+  apiVersion: v1
   metadata:
     name: gogs-data
   spec:
@@ -235,15 +255,8 @@ objects:
     resources:
       requests:
         storage: ${VOLUME_CAPACITY}
-- apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    creationTimestamp: null
-    labels:
-      template: ${APPLICATION_NAME}
-    name: ${APPLICATION_NAME}
-- apiVersion: v1
-  kind: PersistentVolumeClaim
+- kind: PersistentVolumeClaim
+  apiVersion: v1
   metadata:
     name: gogs-postgres-data
   spec:
@@ -252,6 +265,16 @@ objects:
     resources:
       requests:
         storage: ${DB_VOLUME_CAPACITY}
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: gogs-repositories
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${GOGS_REPOSITORY_VOLUME_CAPACITY}
 parameters:
 - description: The name for the application.
   name: APPLICATION_NAME
@@ -267,6 +290,10 @@ parameters:
   name: DB_VOLUME_CAPACITY
   required: true
   value: 1Gi
+- description: Volume space available for Gogs repository data, e.g. 512Mi, 2Gi
+  name: GOGS_REPOSITORY_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
 - description: Maximum amount of memory the PostgreSQL container can use.
   displayName: Memory Limit (PostgreSQL)
   name: MEMORY_POSTGRESQL_LIMIT
@@ -276,11 +303,11 @@ parameters:
   value: gogs-postgresql
 - displayName: Database Username
   from: gogs
-  generate: expression
+  value: gogs
   name: DATABASE_USER
 - displayName: Database Password
   from: '[a-zA-Z0-9]{8}'
-  generate: expression
+  value: gogs
   name: DATABASE_PASSWORD
 - displayName: Database Name
   name: DATABASE_NAME
@@ -297,7 +324,7 @@ parameters:
   value: 12MB
 - name: GOGS_VERSION
   displayName: Gogs Version
-  description: 'Version of the Artifactory container image to be used'
+  description: 'Version of the Gogs container image to be used'
   value: "0.9.97-1"
   required: true
 - name: GOGS_REPOSITORY_NAME
@@ -307,6 +334,6 @@ parameters:
   required: true
 - name: GOGS_IMAGE_NAME
   displayName: Gogs container image name
-  description: 'Name of the Artifactory container image to be used'
+  description: 'Name of the Gogs container image to be used'
   value: 'gogs'
   required: true
