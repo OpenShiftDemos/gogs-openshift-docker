@@ -28,7 +28,7 @@ If you wish to change the route URL or change the name of the application
 components, you can do so:
 
     oc process -f gogs.yaml -v APPLICATION_NAME=foo,HOSTNAME_HTTP=www.bar.baz \
-    | oc create -f
+    | oc create -f -
 
 HTTPS is currently unsupported. Pull requests welcome.
 
