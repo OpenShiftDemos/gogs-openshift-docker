@@ -6,7 +6,7 @@ requirements. This repository contains:
 
 * A Dockerfile for building an OpenShift-compatible Gogs image
 * Various scripts used in the Docker image
-* An OpenShift template for deploying the image
+* OpenShift templates for deploying the image
 * Usage instructions
 
 ## Prerequisites
@@ -30,6 +30,8 @@ Otherwise:
 ```
 oc new-app -f https://raw.githubusercontent.com/OpenShiftDemos/gogs-openshift-docker/master/openshift/gogs-template.yaml --param=HOSTNAME=gogs-demo.yourdomain.com
 ```
+
+Note that hostname is required during Gogs installation in order to configure repository urls correctly.
 
 ## ToDos
 * git via ssh support
