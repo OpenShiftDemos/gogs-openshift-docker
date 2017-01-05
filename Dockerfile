@@ -2,7 +2,7 @@ FROM centos:7
 
 MAINTAINER Erik Jacobs <erikmjacobs@gmail.com>
 
-ENV GOGS_VERSION="0.9.97"
+ENV GOGS_VERSION="0.9.113"
 
 LABEL name="Gogs - Go Git Service" \
       vendor="Gogs" \
@@ -11,8 +11,8 @@ LABEL name="Gogs - Go Git Service" \
       summary="The goal of this project is to make the easiest, fastest, and most painless way of setting up a self-hosted Git service." \
       io.openshift.expose-services="3000,gogs" \
       io.openshift.tags="gogs" \
-      build-date="2016-10-23" \
-      version="0.9.97" \
+      build-date="2017-01-05" \
+      version="0.9.113" \
       release="1"
 
 ENV HOME=/var/lib/gogs
