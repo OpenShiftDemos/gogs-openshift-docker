@@ -247,7 +247,7 @@ objects:
         version: "latest"
       from:
         kind: ImageStreamTag
-        name: "0.9.97"
+        name: "${GOGS_VERSION}"
       importPolicy: {}
       name: "latest"
 - kind: PersistentVolumeClaim
@@ -336,6 +336,6 @@ parameters:
   value: 12MB
 - name: GOGS_VERSION
   displayName: Gogs Version
-  description: 'Version of the Gogs container image to be used'
+  description: 'Version of the Gogs container image to be used (0.9.97 or 0.9.113)'
   value: "0.9.97"
   required: true
