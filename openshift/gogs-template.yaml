@@ -267,7 +267,7 @@ objects:
       ROOT_URL=http://${HOSTNAME}
 
       [security]
-      INSTALL_LOCK = true
+      INSTALL_LOCK = ${INSTALL_LOCK}
 
       [service]
       ENABLE_CAPTCHA = false
@@ -305,3 +305,7 @@ parameters:
   description: 'Version of the Gogs container image to be used (0.9.97 or 0.9.113)'
   value: "0.9.97"
   required: true
+- name: INSTALL_LOCK
+  displayName: Installation lock
+  description: 'If set to true, installation (/install) page will be disabled. Set to false if you want to run the installation wizard via web'
+  value: "true"
