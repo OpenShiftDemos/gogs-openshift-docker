@@ -1,13 +1,9 @@
 kind: Template
 apiVersion: v1
-labels:
-  version: 0.9.97-1
-  group: infrastructure
 metadata:
   annotations:
     description: The Gogs git server (https://gogs.io/)
     tags: instant-app,gogs,go,golang
-    version: 0.9.97-1
   name: gogs
 objects:
 - kind: ServiceAccount
