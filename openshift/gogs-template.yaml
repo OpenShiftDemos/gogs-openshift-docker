@@ -265,6 +265,7 @@ objects:
 
       [server]
       ROOT_URL=http://${HOSTNAME}
+      SSH_DOMAIN=${HOSTNAME}
 
       [security]
       INSTALL_LOCK = ${INSTALL_LOCK}
@@ -305,7 +306,7 @@ parameters:
   value: 12MB
 - name: GOGS_VERSION
   displayName: Gogs Version
-  description: 'Version of the Gogs container image to be used (0.9.97 or 0.9.113)'
+  description: 'Version of the Gogs container image to be used (check the available version https://hub.docker.com/r/openshiftdemos/gogs/tags)'
   value: "0.9.97"
   required: true
 - name: INSTALL_LOCK
