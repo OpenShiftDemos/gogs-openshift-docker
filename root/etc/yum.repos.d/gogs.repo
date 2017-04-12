@@ -1,4 +1,0 @@
-[gogs]
-name=Repository for pkgr/gogs application.
-baseurl=https://rpm.packager.io/gh/pkgr/gogs/centos7/pkgr
-enabled=1
