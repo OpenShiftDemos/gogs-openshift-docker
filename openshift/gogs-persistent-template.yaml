@@ -3,8 +3,9 @@ apiVersion: v1
 metadata:
   annotations:
     description: The Gogs git server (https://gogs.io/)
-    tags: instant-app,gogs,go,golang
-  name: gogs
+    tags: instant-app,gogs,datastore
+    iconClass: "icon-github"
+  name: gogs-persistent
 objects:
 - kind: ServiceAccount
   apiVersion: v1
@@ -94,7 +95,7 @@ objects:
         - postgresql
         from:
           kind: ImageStreamTag
-          name: postgresql:9.4
+          name: postgresql:9.5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -172,9 +173,9 @@ objects:
           terminationMessagePath: /dev/termination-log
           volumeMounts:
           - name: gogs-data
-            mountPath: /opt/gogs/data
+            mountPath: /data
           - name: gogs-config
-            mountPath: /etc/gogs/conf
+            mountPath: /opt/gogs/custom/conf
           readinessProbe:
               httpGet:
                 path: /
@@ -231,7 +232,7 @@ objects:
     - name: "${GOGS_VERSION}"
       from:
         kind: DockerImage
-        name: docker.io/openshiftdemos/gogs:${GOGS_VERSION}
+        name: docker.io/${GOGS_IMAGE}:${GOGS_VERSION}
       importPolicy: {}
       annotations:
         description: The Gogs git server docker image
@@ -272,6 +273,7 @@ objects:
     name: gogs-config
   data:
     app.ini: |
+      APP_NAME = Gogs
       RUN_MODE = prod
       RUN_USER = gogs
 
@@ -281,9 +283,10 @@ objects:
       NAME     = ${DATABASE_NAME}
       USER     = ${DATABASE_USER}
       PASSWD   = ${DATABASE_PASSWORD}
+      SSL_MODE = disable
 
       [repository]
-      ROOT = /opt/gogs/data/repositories
+      ROOT = /data/repositories
 
       [server]
       ROOT_URL=http://${HOSTNAME}
@@ -291,8 +294,19 @@ objects:
       [security]
       INSTALL_LOCK = ${INSTALL_LOCK}
 
+      [mailer]
+      ENABLED = false
+
       [service]
       ENABLE_CAPTCHA = false
+      REGISTER_EMAIL_CONFIRM = false
+      ENABLE_NOTIFY_MAIL     = false
+      DISABLE_REGISTRATION   = false
+      REQUIRE_SIGNIN_VIEW    = false
+
+      [picture]
+      DISABLE_GRAVATAR        = false
+      ENABLE_FEDERATED_AVATAR = true
 
       [webhook]
       SKIP_TLS_VERIFY = ${SKIP_TLS_VERIFY}
@@ -303,7 +317,6 @@ parameters:
   value: gogs
 - description: 'Custom hostname for http service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>'
   name: HOSTNAME
-  required: true
 - description: Volume space available for data, e.g. 512Mi, 2Gi
   name: GOGS_VOLUME_CAPACITY
   required: true
@@ -333,11 +346,6 @@ parameters:
 - displayName: Shared Buffer Amount
   name: DATABASE_SHARED_BUFFERS
   value: 12MB
-- name: GOGS_VERSION
-  displayName: Gogs Version
-  description: 'Version of the Gogs container image to be used (0.9.97 or 0.9.113)'
-  value: "0.9.97"
-  required: true
 - name: INSTALL_LOCK
   displayName: Installation lock
   description: 'If set to true, installation (/install) page will be disabled. Set to false if you want to run the installation wizard via web'
@@ -345,4 +353,14 @@ parameters:
 - name: SKIP_TLS_VERIFY
   displayName: Skip TLS verification on webhooks
   description: Skip TLS verification on webhooks. Enable with caution!
-  value: "false"
+  value: "true"
+- name: GOGS_IMAGE
+  displayName: Gogs Image
+  description: The name and tag for the Gogs Image to use
+  value: "wkulhanek/gogs"
+  required: true
+- name: GOGS_VERSION
+  displayName: Gogs Image Version Tag
+  description: The tag for the Gogs Image to use
+  value: "11.4"
+  required: true

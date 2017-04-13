@@ -1,14 +1,22 @@
 #!/bin/bash
 
+# Determine UID and GID under which the container is running
 export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)
 
+# Make a copy of /etc/passwd in $HOME/passwd excluding
+# the `gogs` user.
 grep -v ^gogs /etc/passwd > "${HOME}/passwd"
-echo "gogs:x:${USER_ID}:${GROUP_ID}:gogs.io user:${HOME}:/bin/bash" >> "${HOME}/passwd"
-echo "gogs:x:${USER_ID}:${GROUP_ID}:gogs.io user:${HOME}:/bin/bash"
 
+# Add the gogs user to the $HOME/passwd file with the current
+# UID and GID
+echo "gogs:x:${USER_ID}:${GROUP_ID}:gogs.io user:${HOME}:/bin/bash" >> "${HOME}/passwd"
+
+# Point CentOS to this new passwd file instead of the system
+# passwd file to make sure the gogs user is correctly assigned
 export LD_PRELOAD=libnss_wrapper.so
 export NSS_WRAPPER_PASSWD=${HOME}/passwd
 export NSS_WRAPPER_GROUP=/etc/group
 
+# Finally start Gogs
 /opt/gogs/gogs web
