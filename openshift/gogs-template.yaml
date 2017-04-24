@@ -216,7 +216,7 @@ objects:
         - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          name: ${APPLICATION_NAME}:latest
+          name: ${APPLICATION_NAME}:${GOGS_VERSION}
       type: ImageChange
 - kind: ImageStream
   apiVersion: v1
@@ -235,15 +235,6 @@ objects:
         description: The Gogs git server docker image
         tags: gogs,go,golang
         version: "${GOGS_VERSION}"
-    - annotations:
-        description: The Gogs git server docker image
-        tags: gogs,go,golang
-        version: "latest"
-      from:
-        kind: ImageStreamTag
-        name: "${GOGS_VERSION}"
-      importPolicy: {}
-      name: "latest"
 - kind: ConfigMap
   apiVersion: v1
   metadata:
