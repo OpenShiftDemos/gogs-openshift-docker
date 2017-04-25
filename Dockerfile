@@ -2,7 +2,7 @@ FROM centos:7
 
 MAINTAINER Erik Jacobs <erikmjacobs@gmail.com>
 
-ENV GOGS_VERSION="0.9.113"
+ARG GOGS_VERSION="0.9.113"
 
 LABEL name="Gogs - Go Git Service" \
       vendor="Gogs" \
@@ -11,8 +11,8 @@ LABEL name="Gogs - Go Git Service" \
       summary="The goal of this project is to make the easiest, fastest, and most painless way of setting up a self-hosted Git service." \
       io.openshift.expose-services="3000,gogs" \
       io.openshift.tags="gogs" \
-      build-date="2017-01-05" \
-      version="0.9.113" \
+      build-date="2017-04-02" \
+      version="${GOGS_VERSION}" \
       release="1"
 
 ENV HOME=/var/lib/gogs
@@ -21,7 +21,7 @@ COPY ./root /
 
 RUN rpm --import https://rpm.packager.io/key && \
     yum -y install epel-release && \
-    yum -y --setopt=tsflags=nodocs install gogs nss_wrapper gettext && \
+    yum -y --setopt=tsflags=nodocs install gogs-${GOGS_VERSION} nss_wrapper gettext && \
     yum -y clean all && \
     mkdir -p /var/lib/gogs
 

@@ -93,7 +93,7 @@ objects:
         - postgresql
         from:
           kind: ImageStreamTag
-          name: postgresql:9.4
+          name: postgresql:9.5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -216,7 +216,7 @@ objects:
         - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          name: ${APPLICATION_NAME}:latest
+          name: ${APPLICATION_NAME}:${GOGS_VERSION}
       type: ImageChange
 - kind: ImageStream
   apiVersion: v1
@@ -235,15 +235,6 @@ objects:
         description: The Gogs git server docker image
         tags: gogs,go,golang
         version: "${GOGS_VERSION}"
-    - annotations:
-        description: The Gogs git server docker image
-        tags: gogs,go,golang
-        version: "latest"
-      from:
-        kind: ImageStreamTag
-        name: "${GOGS_VERSION}"
-      importPolicy: {}
-      name: "latest"
 - kind: ConfigMap
   apiVersion: v1
   metadata:
@@ -265,6 +256,7 @@ objects:
 
       [server]
       ROOT_URL=http://${HOSTNAME}
+      SSH_DOMAIN=${HOSTNAME}
 
       [security]
       INSTALL_LOCK = ${INSTALL_LOCK}
@@ -305,7 +297,7 @@ parameters:
   value: 12MB
 - name: GOGS_VERSION
   displayName: Gogs Version
-  description: 'Version of the Gogs container image to be used (0.9.97 or 0.9.113)'
+  description: 'Version of the Gogs container image to be used (check the available version https://hub.docker.com/r/openshiftdemos/gogs/tags)'
   value: "0.9.97"
   required: true
 - name: INSTALL_LOCK
