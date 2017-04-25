@@ -11,7 +11,7 @@ https://hub.docker.com/r/openshiftdemos/gogs/tags/
 $ oc process \
         -f http://bit.ly/openshift-gogs-persistent-template \
         --param=HOSTNAME=your-gogs-hostname \
-        --param=VERSION=0.11.4 \
+        --param=GOGS_VERSION=0.11.4 \
         | oc create -f -
 ```
 
@@ -21,6 +21,6 @@ $ oc process \
 $ oc process \
         -f http://bit.ly/openshift-gogs-template \
         --param=HOSTNAME=your-gogs-hostname \
-        --param=VERSION=0.11.4 \
+        --param=GOGS_VERSION=0.11.4 \
         | oc create -f -
 ```
