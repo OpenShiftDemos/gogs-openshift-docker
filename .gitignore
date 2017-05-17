@@ -1,1 +1,4 @@
 .project
+cm.sh
+clean.sh
+setup.sh
