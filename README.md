@@ -9,7 +9,15 @@ requirements. This repository contains:
 * OpenShift templates for deploying the image
 * Usage instructions
 
-## Deployment
+## Deployment with embedded SQLite
+There is a templates available for deploying Gogs with the embedded SQLite database which 
+requires a `PersistentVolume` to be available on your OpenShift cluster.
+
+```
+oc new-app -f http://bit.ly/openshift-nodb-template --param=HOSTNAME=gogs-demo.yourdomain.com
+```
+
+## Deployment with PostgreSQL
 There are two templates available: _persistent_ and _non-persistent_. The pesistent one requires two `PersistentVolume` available with default size required of 1Gi (the volume size can be specified with the template variables: `GOGS_VOLUME_CAPACITY` and `DB_VOLUME_CAPACITY`).
 
 * gogs-data 
