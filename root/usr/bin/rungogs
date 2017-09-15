@@ -10,5 +10,6 @@ export LD_PRELOAD=libnss_wrapper.so
 export NSS_WRAPPER_PASSWD=${HOME}/passwd
 export NSS_WRAPPER_GROUP=/etc/group
 export PORT=3000
+export USER=gogs
 
-/usr/bin/gogs run web
+/opt/gogs/gogs web
