@@ -12,4 +12,5 @@ export NSS_WRAPPER_GROUP=/etc/group
 export PORT=3000
 export USER=gogs
 
-/opt/gogs/gogs web
+cd /opt/gogs
+./gogs web
