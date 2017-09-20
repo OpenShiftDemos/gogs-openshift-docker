@@ -153,6 +153,8 @@ objects:
   apiVersion: v1
   metadata:
     name: gogs-data
+    labels:
+      app: ${APPLICATION_NAME}
   spec:
     accessModes:
       - ReadWriteOnce
@@ -163,6 +165,8 @@ objects:
   apiVersion: v1
   metadata:
     name: gogs-config
+    labels:
+      app: ${APPLICATION_NAME}
   data:
     app.ini: |
       RUN_MODE = prod

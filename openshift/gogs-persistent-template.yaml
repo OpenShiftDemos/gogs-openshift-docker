@@ -19,6 +19,8 @@ objects:
     annotations:
       description: Exposes the database server
     name: ${APPLICATION_NAME}-postgresql
+    labels:
+      app: ${APPLICATION_NAME}
   spec:
     ports:
     - name: postgresql
@@ -32,6 +34,8 @@ objects:
     annotations:
       description: Defines how to deploy the database
     name: ${APPLICATION_NAME}-postgresql
+    labels:
+      app: ${APPLICATION_NAME}
   spec:
     replicas: 1
     selector:
@@ -241,6 +245,8 @@ objects:
   apiVersion: v1
   metadata:
     name: gogs-data
+    labels:
+      app: ${APPLICATION_NAME}
   spec:
     accessModes:
       - ReadWriteOnce
@@ -251,6 +257,8 @@ objects:
   apiVersion: v1
   metadata:
     name: gogs-postgres-data
+    labels:
+      app: ${APPLICATION_NAME}
   spec:
     accessModes:
       - ReadWriteOnce
@@ -261,6 +269,8 @@ objects:
   apiVersion: v1
   metadata:
     name: gogs-config
+    labels:
+      app: ${APPLICATION_NAME}
   data:
     app.ini: |
       RUN_MODE = prod

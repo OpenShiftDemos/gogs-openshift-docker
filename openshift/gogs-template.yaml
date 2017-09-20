@@ -32,6 +32,8 @@ objects:
     annotations:
       description: Defines how to deploy the database
     name: ${APPLICATION_NAME}-postgresql
+    labels:
+      app: ${APPLICATION_NAME}
   spec:
     replicas: 1
     selector:
@@ -239,6 +241,8 @@ objects:
   apiVersion: v1
   metadata:
     name: gogs-config
+    labels:
+      app: ${APPLICATION_NAME}
   data:
     app.ini: |
       RUN_MODE = prod
