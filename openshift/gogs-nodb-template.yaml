@@ -211,7 +211,7 @@ parameters:
 - name: GOGS_VERSION
   displayName: Gogs Version
   description: 'Version of the Gogs container image to be used (check the available version https://hub.docker.com/r/openshiftdemos/gogs/tags, currently only 0.11.29 supports SQLite)'
-  value: "0.11.29"
+  value: "0.11.29-sqlite"
   required: true
 - name: INSTALL_LOCK
   displayName: Installation lock
