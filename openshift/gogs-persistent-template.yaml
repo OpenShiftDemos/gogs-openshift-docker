@@ -69,6 +69,8 @@ objects:
             tcpSocket:
               port: 5432
             timeoutSeconds: 1
+            failureThreshold: 10
+            periodSeconds: 20
           name: postgresql
           ports:
           - containerPort: 5432
@@ -81,6 +83,7 @@ objects:
               - psql -h 127.0.0.1 -U ${POSTGRESQL_USER} -q -d ${POSTGRESQL_DATABASE} -c 'SELECT 1'
             initialDelaySeconds: 5
             timeoutSeconds: 1
+            failureThreshold: 10
           resources:
             limits:
               memory: 512Mi
@@ -188,17 +191,17 @@ objects:
               timeoutSeconds: 1
               periodSeconds: 20
               successThreshold: 1
-              failureThreshold: 3
+              failureThreshold: 10
           livenessProbe:
               httpGet:
                 path: /
                 port: 3000
                 scheme: HTTP
-              initialDelaySeconds: 3
+              initialDelaySeconds: 20
               timeoutSeconds: 1
               periodSeconds: 10
               successThreshold: 1
-              failureThreshold: 3
+              failureThreshold: 10
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         securityContext: {}
