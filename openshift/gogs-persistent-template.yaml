@@ -81,7 +81,7 @@ objects:
               - -i
               - -c
               - psql -h 127.0.0.1 -U ${POSTGRESQL_USER} -q -d ${POSTGRESQL_DATABASE} -c 'SELECT 1'
-            initialDelaySeconds: 5
+            initialDelaySeconds: 30
             timeoutSeconds: 1
             failureThreshold: 10
           resources:
@@ -187,7 +187,7 @@ objects:
                 path: /
                 port: 3000
                 scheme: HTTP
-              initialDelaySeconds: 3
+              initialDelaySeconds: 40
               timeoutSeconds: 1
               periodSeconds: 20
               successThreshold: 1
@@ -197,7 +197,7 @@ objects:
                 path: /
                 port: 3000
                 scheme: HTTP
-              initialDelaySeconds: 20
+              initialDelaySeconds: 40
               timeoutSeconds: 1
               periodSeconds: 10
               successThreshold: 1
