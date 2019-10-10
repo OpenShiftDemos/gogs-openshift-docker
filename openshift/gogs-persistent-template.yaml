@@ -101,7 +101,7 @@ objects:
         - postgresql
         from:
           kind: ImageStreamTag
-          name: postgresql:9.5
+          name: postgresql:${DATABASE_VERSION}
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -338,6 +338,9 @@ parameters:
 - displayName: Shared Buffer Amount
   name: DATABASE_SHARED_BUFFERS
   value: 12MB
+- displayName: Database version (PostgreSQL)
+  name: DATABASE_VERSION
+  value: "9.5"
 - name: GOGS_VERSION
   displayName: Gogs Version
   description: 'Version of the Gogs container image to be used (check the available version https://hub.docker.com/r/openshiftdemos/gogs/tags)'

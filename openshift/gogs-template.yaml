@@ -9,7 +9,6 @@ objects:
 - kind: ServiceAccount
   apiVersion: v1
   metadata:
-    creationTimestamp: null
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
@@ -95,7 +94,7 @@ objects:
         - postgresql
         from:
           kind: ImageStreamTag
-          name: postgresql:9.5
+          name: postgresql:${DATABASE_VERSION}
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -114,13 +113,15 @@ objects:
       port: 3000
       protocol: TCP
       targetPort: 3000
+    - name: 10022-tcp
+      port: 10022
+      protocol: TCP
+      targetPort: 10022
     selector:
       app: ${APPLICATION_NAME}
       deploymentconfig: ${APPLICATION_NAME}
     sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - kind: Route
   apiVersion: v1
   id: ${APPLICATION_NAME}-http
@@ -132,6 +133,23 @@ objects:
     name: ${APPLICATION_NAME}
   spec:
     host: ${HOSTNAME}
+    port:
+      targetPort: 3000-tcp
+    to:
+      name: ${APPLICATION_NAME}
+- kind: Route
+  apiVersion: v1
+  id: ${APPLICATION_NAME}-ssh
+  metadata:
+    annotations:
+      description: Route for application's ssh service.
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}-ssh
+  spec:
+    host: secure${HOSTNAME}
+    port:
+      targetPort: 10022-tcp
     to:
       name: ${APPLICATION_NAME}
 - kind: DeploymentConfig
@@ -168,6 +186,8 @@ objects:
           name: ${APPLICATION_NAME}
           ports:
           - containerPort: 3000
+            protocol: TCP
+          - containerPort: 10022
             protocol: TCP
           resources: {}
           terminationMessagePath: /dev/termination-log
@@ -260,7 +280,9 @@ objects:
 
       [server]
       ROOT_URL=http://${HOSTNAME}
-      SSH_DOMAIN=${HOSTNAME}
+      SSH_DOMAIN=secure${HOSTNAME}
+      START_SSH_SERVER=true
+      SSH_LISTEN_PORT=10022
 
       [security]
       INSTALL_LOCK = ${INSTALL_LOCK}
@@ -299,10 +321,13 @@ parameters:
 - displayName: Shared Buffer Amount
   name: DATABASE_SHARED_BUFFERS
   value: 12MB
+- displayName: Database version (PostgreSQL)
+  name: DATABASE_VERSION
+  value: "9.5"
 - name: GOGS_VERSION
   displayName: Gogs Version
   description: 'Version of the Gogs container image to be used (check the available version https://hub.docker.com/r/openshiftdemos/gogs/tags)'
-  value: "0.9.97"
+  value: "0.11.34"
   required: true
 - name: INSTALL_LOCK
   displayName: Installation lock
