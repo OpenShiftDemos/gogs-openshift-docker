@@ -35,7 +35,11 @@ oc new-app -f http://bit.ly/openshift-gogs-template --param=HOSTNAME=gogs-demo.y
 ```
 
 # Gogs Admin User
-After Gogs deployment, the first registered user will be admin. The default administrator can log into Admin > Users and authorize another user. A user will also be an > administrator if they register in the install page. Read more on [Gogs FAQ](https://gogs.io/docs/intro/faqs#how-can-i-become-an-administrator%3F)
+After Gogs deployment, the first user registered will be given administrator rights.
+
+Once created, administrators can log into Admin > Users and authorize other users as administrators. 
+
+Read more on [Gogs FAQ](https://gogs.io/docs/intro/faqs#how-can-i-become-an-administrator%3F)
 
 
 
