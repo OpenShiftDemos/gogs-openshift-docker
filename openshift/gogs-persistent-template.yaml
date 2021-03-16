@@ -86,7 +86,7 @@ objects:
             failureThreshold: 10
           resources:
             limits:
-              memory: 512Mi
+              memory: 1Gi
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: gogs-postgres-data
@@ -238,7 +238,7 @@ objects:
     - name: "${GOGS_VERSION}"
       from:
         kind: DockerImage
-        name: docker.io/openshiftdemos/gogs:${GOGS_VERSION}
+        name: docker.io/javierleonperis/openshift-gogs:${GOGS_VERSION}
       importPolicy: {}
       annotations:
         description: The Gogs git server docker image
@@ -309,6 +309,7 @@ parameters:
 - description: 'Custom hostname for http service route.  Leave blank for default hostname, e.g.: <application-name>-<project>.<default-domain-suffix>'
   name: HOSTNAME
   required: true
+  value: gogs-git-server-02.apps.osh-jc2.om.dsn.inet
 - description: Volume space available for data, e.g. 512Mi, 2Gi
   name: GOGS_VOLUME_CAPACITY
   required: true
@@ -323,14 +324,15 @@ parameters:
   name: DATABASE_USER
 - displayName: Database Password
   from: '[a-zA-Z0-9]{8}'
-  value: gogs
+  value: changeyourpassword
   name: DATABASE_PASSWORD
 - displayName: Database Name
   name: DATABASE_NAME
   value: gogs
 - displayName: Database Admin Password
-  from: '[a-zA-Z0-9]{8}'
-  generate: expression
+  #from: '[a-zA-Z0-9]{8}'
+  #generate: expression
+  value: changeyourpassword
   name: DATABASE_ADMIN_PASSWORD
 - displayName: Maximum Database Connections
   name: DATABASE_MAX_CONNECTIONS
@@ -340,11 +342,11 @@ parameters:
   value: 12MB
 - displayName: Database version (PostgreSQL)
   name: DATABASE_VERSION
-  value: "9.5"
+  value: "latest"
 - name: GOGS_VERSION
   displayName: Gogs Version
   description: 'Version of the Gogs container image to be used (check the available version https://hub.docker.com/r/openshiftdemos/gogs/tags)'
-  value: "0.9.97"
+  value: "latest"
   required: true
 - name: INSTALL_LOCK
   displayName: Installation lock
