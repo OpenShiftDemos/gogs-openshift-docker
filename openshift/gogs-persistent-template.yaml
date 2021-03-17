@@ -284,7 +284,7 @@ objects:
       HOST     = ${APPLICATION_NAME}-postgresql:5432
       NAME     = ${DATABASE_NAME}
       USER     = ${DATABASE_USER}
-      PASSWD   = ${DATABASE_PASSWORD}
+      PASSWORD   = ${DATABASE_PASSWORD}
 
       [repository]
       ROOT = /opt/gogs/data/repositories
@@ -345,8 +345,8 @@ parameters:
   value: "latest"
 - name: GOGS_VERSION
   displayName: Gogs Version
-  description: 'Version of the Gogs container image to be used (check the available version https://hub.docker.com/r/openshiftdemos/gogs/tags)'
-  value: "latest"
+  description: 'Version of the Gogs container image to be used (check the available version https://hub.docker.com/repository/docker/javierleonperis/openshift-gogs/tags)'
+  value: "1.0"
   required: true
 - name: INSTALL_LOCK
   displayName: Installation lock
