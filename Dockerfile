@@ -1,8 +1,8 @@
 FROM centos:7
 
-MAINTAINER Erik Jacobs <erikmjacobs@gmail.com>
+MAINTAINER Javier León Peris <javierleonperis@gmail.com>
 
-ARG GOGS_VERSION="0.9.113"
+ARG GOGS_VERSION="0.12.1"
 
 LABEL name="Gogs - Go Git Service" \
       vendor="Gogs" \
@@ -19,9 +19,9 @@ ENV HOME=/var/lib/gogs
 
 COPY ./root /
 
-RUN curl -L -o /etc/yum.repos.d/gogs.repo https://dl.packager.io/srv/pkgr/gogs/pkgr/installer/el/7.repo && \
-    rpm --import https://rpm.packager.io/key && \
+RUN curl -L -o /etc/yum.repos.d/gogs.repo https://dl.packager.io/srv/gogs/gogs/main/installer/el/7.repo && \
     yum -y install epel-release && \
+    yum -y update && \
     yum -y --setopt=tsflags=nodocs install gogs-${GOGS_VERSION} nss_wrapper gettext && \
     yum -y clean all && \
     mkdir -p /var/lib/gogs
