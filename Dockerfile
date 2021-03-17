@@ -2,7 +2,7 @@ FROM centos:7
 
 MAINTAINER Javier León Peris <javierleonperis@gmail.com>
 
-ARG GOGS_VERSION="0.12.3"
+ARG GOGS_VERSION="0.12.1"
 
 LABEL name="Gogs - Go Git Service" \
       vendor="Gogs" \
